@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Número e y Distribución Normal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* Menú lateral */
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(180deg, #2c3e50 0%, #1a2530 100%);
+            color: white;
+            padding: 25px 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .logo {
+            text-align: center;
+            padding: 0 20px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: #3498db;
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .menu {
+            flex-grow: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left-color: #3498db;
+        }
+
+        .menu-item.active {
+            background-color: rgba(52, 152, 219, 0.2);
+            border-left-color: #3498db;
+        }
+
+        .menu-icon {
+            font-size: 1.2rem;
+            margin-right: 15px;
+            width: 24px;
+            text-align: center;
+            color: #3498db;
+        }
+
+        .menu-text {
+            font-size: 1.1rem;
+        }
+
+        /* Contenido principal */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-width: calc(100vw - 300px);
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+        }
+
+        .section-header p {
+            color: #7f8c8d;
+            margin-top: 8px;
+            font-size: 1.1rem;
+        }
+
+        .content-box {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .history-content {
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        .history-content h3 {
+            color: #2c3e50;
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-content p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .math-expression {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+            overflow-x: auto;
+        }
+
+        .math {
+            font-size: 1.2rem;
+            color: #e74c3c;
+        }
+
+        .function-code {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .function-code .keyword {
+            color: #3498db;
+        }
+
+        .function-code .function {
+            color: #e74c3c;
+        }
+
+        .function-code .number {
+            color: #f1c40f;
+        }
+
+        .calculator {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .inputs {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        .result {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .result-equation {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .formula-display {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            border: 1px dashed #ddd;
+        }
+
+        .formula-display h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .formula {
+            font-size: 1.3rem;
+            color: #e74c3c;
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 15px 0;
+            }
+            
+            .menu {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .menu-item {
+                padding: 12px 20px;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            
+            .menu-item:hover, .menu-item.active {
+                border-left: none;
+                border-bottom-color: #3498db;
+            }
+            
+            .main-content {
+                max-width: 100%;
+                padding: 20px;
+            }
+            
+            .calculator {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .menu-item {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .content-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú lateral -->
+    <div class="sidebar">
+        <div class="logo">
+            <h1><i class="fas fa-calculator"></i> Matemáticas Aplicadas</h1>
+            <p>Número e y Distribución Normal</p>
+        </div>
+        
+        <div class="menu">
+            <div class="menu-item active" data-section="history">
+                <div class="menu-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="menu-text">
+                    Historia del número e
+                </div>
+            </div>
+            
+            <div class="menu-item" data-section="evaluation">
+                <div class="menu-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="menu-text">
+                    Evaluación Distribución Normal
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- Historia del número e -->
+        <div id="history-section" class="content-section">
+            <div class="section-header">
+                <h2>Historia del número <span class="math">e</span></h2>
+                <p>El descubrimiento y desarrollo de una de las constantes matemáticas más importantes</p>
+            </div>
+            
+            <div class="content-box history-content">
+                <h3><i class="fas fa-book"></i> Orígenes en el siglo XVII</h3>
+                <p>El número <span class="math">e</span> surgió de manera indirecta a principios del siglo XVII, cuando el matemático escocés John Napier (1550-1617) inventó los logaritmos para simplificar cálculos complejos en astronomía y navegación. Aunque Napier no identificó explícitamente el número <span class="math">e</span>, su trabajo con logaritmos naturales sentó las bases.</p>
+                
+                <p>Poco después, el suizo Jacob Bernoulli (1655-1705) se acercó al valor de <span class="math">e</span> al estudiar el problema del interés compuesto continuo, descubriendo que al calcular el límite:</p>
+                
+                <div class="math-expression">
+                    <span class="math">\[ \lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n = e \approx 2.71828 \]</span>
+                </div>
+                
+                <p>se obtenía un número constante aproximadamente igual a 2.71828.</p>
+                
+                <h3><i class="fas fa-users"></i> Consolidación en el siglo XVIII</h3>
+                <p>Fue Leonhard Euler (1707-1783) quien le dio su nombre definitivo y exploró sistemáticamente sus propiedades. En su obra <em>Introductio in analysin infinitorum</em> (1748), Euler definió <span class="math">e</span> como la base de los logaritmos naturales, demostró que era irracional, y lo relacionó con series infinitas mediante la famosa expresión:</p>
+                
+                <div class="math-expression">
+                    <span class="math">\[ e = \sum_{n=0}^{\infty} \frac{1}{n!} = \frac{1}{0!} + \frac{1}{1!} + \frac{1}{2!} + \frac{1}{3!} + \cdots \]</span>
+                </div>
+                
+                <p>Además, Euler conectó <span class="math">e</span> con la trigonometría a través de la identidad:</p>
+                
+                <div class="math-expression">
+                    <span class="math">\[ e^{i\theta} = \cos\theta + i\sin\theta \]</span>
+                </div>
+                
+                <p>culminando en la elegante fórmula <span class="math">\[ e^{i\pi} + 1 = 0 \]</span>, que unificaba constantes fundamentales.</p>
+                
+                <h3><i class="fas fa-rocket"></i> Desarrollo moderno y aplicaciones</h3>
+                <p>En los siglos XIX y XX, <span class="math">e</span> adquirió un papel central en el análisis matemático, particularmente en el cálculo diferencial e integral, donde la función exponencial <span class="math">e^x</span> es su propia derivada:</p>
+                
+                <div class="math-expression">
+                    <span class="math">\[ \frac{d}{dx} e^x = e^x \]</span>
+                </div>
+                
+                <p>Augustin-Louis Cauchy y Karl Weierstrass formalizaron su definición mediante límites y series. Hoy, <span class="math">e</span> es indispensable en modelos de crecimiento poblacional, desintegración radiactiva, teoría de probabilidades (distribución normal), ecuaciones diferenciales, y áreas como la física cuántica, economía y teoría de la información, confirmando su estatus como una de las constantes matemáticas más universales.</p>
+            </div>
+        </div>
+        
+        <!-- Evaluación de distribución normal -->
+        <div id="evaluation-section" class="content-section" style="display: none;">
+            <div class="section-header">
+                <h2>Evaluación de la Distribución Normal</h2>
+                <p>Calcular valores de la función de densidad de probabilidad normal</p>
+            </div>
+            
+            <div class="content-box">
+                <p>La distribución normal (o gaussiana) es una de las distribuciones de probabilidad más importantes en estadística. Su función de densidad de probabilidad está dada por:</p>
+                
+                <div class="formula-display">
+                    <h4>Función de Densidad de Probabilidad Normal</h4>
+                    <div class="formula">
+                        f(x) = (1/(σ√(2π))) · e<sup>-0.5·((x-μ)/σ)<sup>2</sup></sup>
+                    </div>
+                    <p>donde μ es la media, σ es la desviación estándar, y e es el número de Euler (~2.71828)</p>
+                </div>
+                
+                <div class="function-code">
+                    <span class="keyword">def</span> <span class="function">distribucionN</span>(a, b, x):<br>
+                    &nbsp;&nbsp;y = (<span class="number">1</span>/(a*math.sqrt(<span class="number">2</span>*math.pi))) * math.exp(<span class="number">1</span>)**((-<span class="number">0.5</span>)*((x-b)/a)**<span class="number">2</span>)<br>
+                    &nbsp;&nbsp;<span class="keyword">return</span>(y)<br>
+                    <br>
+                    <span class="comment"># Ejemplo de uso:</span><br>
+                    distribucionN(<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>) <span class="comment"># Resultado: ~0.398942</span>
+                </div>
+                
+                <h3>Calculadora de Distribución Normal</h3>
+                <p>Ingrese los parámetros de la distribución normal (μ y σ) y el valor x para calcular f(x):</p>
+                
+                <div class="calculator">
+                    <div class="inputs">
+                        <div class="input-group">
+                            <label for="sigma">Desviación estándar (σ) - Parámetro "a" en la función:</label>
+                            <input type="number" id="sigma" step="0.1" min="0.1" value="1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="mean">Media (μ) - Parámetro "b" en la función:</label>
+                            <input type="number" id="mean" step="0.1" value="0">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="x-value">Valor de x:</label>
+                            <input type="number" id="x-value" step="0.1" value="0">
+                        </div>
+                        
+                        <button id="calculate-btn" class="button">
+                            <i class="fas fa-calculator"></i> Calcular f(x)
+                        </button>
+                        
+                        <button id="example-btn" class="button" style="background-color: #2c3e50; margin-left: 10px;">
+                            <i class="fas fa-redo"></i> Ejemplo Original
+                        </button>
+                    </div>
+                    
+                    <div class="result">
+                        <h3><i class="fas fa-poll"></i> Resultado</h3>
+                        <div id="result-value" class="result-value">0.398942</div>
+                        <div id="result-equation" class="result-equation">
+                            f(0) = 1/(1·√(2π)) · e<sup>-0.5·((0-0)/1)<sup>2</sup></sup>
+                        </div>
+                        
+                        <div style="margin-top: 20px; font-size: 0.9rem; color: #7f8c8d;">
+                            <p><i class="fas fa-info-circle"></i> Este valor representa la altura de la curva de la campana de Gauss en el punto x.</p>
+                            <p>Para la distribución normal estándar (μ=0, σ=1) en x=0, f(x) alcanza su valor máximo: 1/√(2π) ≈ 0.398942.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; padding: 20px; background-color: #e8f4fc; border-radius: 8px; border-left: 4px solid #3498db;">
+                    <h4><i class="fas fa-lightbulb"></i> Interpretación del resultado</h4>
+                    <p>La función de densidad de probabilidad f(x) no representa una probabilidad directa, sino una densidad. La probabilidad de que una variable aleatoria normal esté en un intervalo [a, b] se calcula integrando f(x) entre a y b.</p>
+                    <p>Para la distribución normal estándar (μ=0, σ=1):</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Aproximadamente el 68% de los valores están dentro de ±1σ de la media</li>
+                        <li>Aproximadamente el 95% de los valores están dentro de ±2σ de la media</li>
+                        <li>Aproximadamente el 99.7% de los valores están dentro de ±3σ de la media</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remover clase active de todos los items
+                document.querySelectorAll('.menu-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                
+                // Agregar clase active al item clickeado
+                this.classList.add('active');
+                
+                // Ocultar todas las secciones
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Mostrar la sección correspondiente
+                const sectionId = this.getAttribute('data-section') + '-section';
+                document.getElementById(sectionId).style.display = 'block';
+            });
+        });
+        
+        // Función de distribución normal
+        function distribucionN(a, b, x) {
+            // a = desviación estándar (sigma)
+            // b = media (mu)
+            // x = valor a evaluar
+            const y = (1/(a*Math.sqrt(2*Math.PI))) * Math.exp((-0.5)*((x-b)/a)**2);
+            return y;
+        }
+        
+        // Calcular y mostrar resultado
+        function calculateAndDisplay() {
+            const sigma = parseFloat(document.getElementById('sigma').value);
+            const mean = parseFloat(document.getElementById('mean').value);
+            const xValue = parseFloat(document.getElementById('x-value').value);
+            
+            // Validar entrada
+            if (isNaN(sigma) || isNaN(mean) || isNaN(xValue)) {
+                alert('Por favor, ingrese valores numéricos válidos');
+                return;
+            }
+            
+            if (sigma <= 0) {
+                alert('La desviación estándar (σ) debe ser mayor que 0');
+                return;
+            }
+            
+            // Calcular
+            const result = distribucionN(sigma, mean, xValue);
+            
+            // Mostrar resultado
+            document.getElementById('result-value').textContent = result.toFixed(6);
+            
+            // Mostrar ecuación
+            const equation = `f(${xValue}) = 1/(${sigma}·√(2π)) · e<sup>-0.5·((${xValue}-${mean})/${sigma})<sup>2</sup></sup>`;
+            document.getElementById('result-equation').innerHTML = equation;
+        }
+        
+        // Establecer ejemplo original
+        function setOriginalExample() {
+            document.getElementById('sigma').value = 1;
+            document.getElementById('mean').value = 0;
+            document.getElementById('x-value').value = 0;
+            calculateAndDisplay();
+        }
+        
+        // Event listeners
+        document.getElementById('calculate-btn').addEventListener('click', calculateAndDisplay);
+        document.getElementById('example-btn').addEventListener('click', setOriginalExample);
+        
+        // Calcular al cambiar valores de entrada
+        document.getElementById('sigma').addEventListener('input', calculateAndDisplay);
+        document.getElementById('mean').addEventListener('input', calculateAndDisplay);
+        document.getElementById('x-value').addEventListener('input', calculateAndDisplay);
+        
+        // Inicializar con el ejemplo original
+        setOriginalExample();
+    </script>
+</body>
+</html>
